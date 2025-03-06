@@ -1,10 +1,10 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/database";
+import { DataTypes, Model } from 'sequelize'
+import sequelize from '../config/database'
 
 class User extends Model {
-  public id!: number;
-  public email!: string;
-  public password!: string;
+  public id!: number
+  public email!: string
+  public password!: string
 }
 
 User.init(
@@ -12,23 +12,23 @@ User.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: { isEmail: true },
+      validate: { isEmail: true }
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
+      allowNull: false
+    }
   },
   {
     sequelize,
-    tableName: "users",
+    tableName: 'users'
   }
-);
+)
 
-export default User;
+export default User

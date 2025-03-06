@@ -5,17 +5,17 @@ export enum Priority {
 }
 
 export enum Status {
-    todo = "To-do",
-    inProgress = "In Progress",
-    complete = "Complete"
+    todo = 'To-do',
+    inProgress = 'In Progress',
+    complete = 'Complete'
 }
 
 export enum TaskFilter {
-    dueDate = "dueDate",
-    priority = "priority",
+    dueDate = 'dueDate',
+    priority = 'priority',
 }
 
 export enum TaskSort {
-    asc = "ASC",
-    desc = "DESC"
+    asc = 'ASC',
+    desc = 'DESC'
 }
