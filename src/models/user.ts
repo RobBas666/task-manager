@@ -27,7 +27,11 @@ User.init(
   },
   {
     sequelize,
-    tableName: 'users'
+    tableName: 'users',
+    indexes: [{
+      unique: true,
+      fields: ['email']
+    }]
   }
 )
 

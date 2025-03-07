@@ -6,7 +6,7 @@ interface TagModel {
 }
 
 class TagService {
-  static async createTag (label: string) {
+  static async createTag(label: string) {
     try {
       const tag = await Tag.create({ label })
 
@@ -16,7 +16,7 @@ class TagService {
     }
   }
 
-  static async getTags () {
+  static async getTags() {
     try {
       const tags = await Tag.findAll()
       return tags
@@ -25,7 +25,7 @@ class TagService {
     }
   }
 
-  static async addTagToTask (taskId: number, label: string) {
+  static async addTagToTask(taskId: number, label: string) {
     try {
       let tag = await Tag.findOne({ where: { label } })
 
@@ -33,6 +33,7 @@ class TagService {
         tag = await TagService.createTag(label)
       }
 
+      //To deal witch concurrency issues above we can also try Tag.findOrCreate({ where: { label }, defaults: { label } });
       const taskTag = await TaskTag.create({ taskId, tagId: tag.id })
       return taskTag
     } catch (e: unknown) {
@@ -40,7 +41,7 @@ class TagService {
     }
   }
 
-  static async removeTagFromTask (taskId: number, tagId: number) {
+  static async removeTagFromTask(taskId: number, tagId: number) {
     try {
       return await TaskTag.destroy({ where: { taskId, tagId } })
     } catch (e: unknown) {
@@ -48,7 +49,7 @@ class TagService {
     }
   }
 
-  static async getTaskTags (id: number) {
+  static async getTaskTags(id: number) {
     try {
       const task = await Task.findByPk(id, { include: Tag })
 
@@ -62,16 +63,19 @@ class TagService {
     }
   }
 
-  static async removeTag (id: number) {
+  static async removeTag(id: number) {
+    const transaction = await Tag.sequelize?.transaction();
     try {
-      await Tag.destroy({ where: { id } })
-      await TagService.removeTagFromAllTasks(id)
+      await TaskTag.destroy({ where: { tagId: id }, transaction });
+      await Tag.destroy({ where: { id }, transaction });
+
+      await transaction?.commit();
     } catch (e: unknown) {
       throw new Error(buildErrorMessage(e, 'Error deleting tag'))
     }
   }
 
-  static async removeTagFromAllTasks (id: number) {
+  static async removeTagFromAllTasks(id: number) {
     try {
       await TaskTag.destroy({ where: { tagId: id } })
     } catch (e: unknown) {

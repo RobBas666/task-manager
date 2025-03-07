@@ -2,19 +2,25 @@ import express from 'express'
 import authMiddleware from '../middleware/auth'
 import TaskService from '../services/taskService'
 import TagService from '../services/tagService'
-import { Status, TaskFilter, TaskSort } from '../consts/enums'
+import { Priority, Status, TaskFilter, TaskSort } from '../consts/enums'
 import { handleError } from '../utils/errorUtils'
 
 const taskRouter = express.Router()
 
 taskRouter.post('/create', authMiddleware, async (req, res) => {
   try {
-    const { title, description, dueDate, priority, status } = req.body
+    const { title, description, dueDate, priority, status, tags } = req.body
     const userId = Number(req.user?.id)
 
-    // add functionality to create task with tags passed in
+    if (status && !Object.values(Status).includes(status as Status)) {
+      res.status(400).json({ message: `${status} is not a valid status` })
+    }
 
-    const task = await TaskService.createTask(title, description, dueDate, priority, status, userId)
+    if (priority && !Object.values(Priority).includes(priority as Priority)) {
+      res.status(400).json({ message: `${priority} is not a valid priority` })
+    }
+
+    const task = await TaskService.createTask(title, description, dueDate, priority, status, tags, userId)
     res.status(201).json({ message: 'Task created successfully', task })
   } catch (e: unknown) {
     handleError(e, res, 500)
