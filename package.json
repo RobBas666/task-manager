@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.ts",
-    "lint": "eslint --fix \"src/**/*.ts\""
+    "lint": "eslint --fix \"src/**/*.ts\"",
+    "init": "npx ts-node init.ts",
+    "init-db": "ts-node init.ts --reset-db"
   },
   "keywords": [],
   "author": "",
