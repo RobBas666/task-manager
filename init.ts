@@ -21,6 +21,8 @@ const secretKey = crypto.randomBytes(32).toString('hex');
 
 const envVars = `PORT=3000,
 JWT_SECRET=${secretKey}
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
 `;
 
 fs.writeFileSync(envFilePath,envVars);

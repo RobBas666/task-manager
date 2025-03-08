@@ -9,6 +9,7 @@ class TagService {
   static async createTag (label: string) {
     try {
       const tag = await Tag.create({ label })
+      console.log(`Created tag: ${tag.label}`)
 
       return tag
     } catch (e: unknown) {

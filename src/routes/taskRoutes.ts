@@ -16,7 +16,7 @@ taskRouter.post('/create', authMiddleware, async (req, res) => {
       res.status(400).json({ message: `${status} is not a valid status` })
     }
 
-    if (priority && !Object.values(Priority).includes(priority as Priority)) {
+    if (priority && !Object.values(Priority).includes(Number(priority) as Priority)) {
       res.status(400).json({ message: `${priority} is not a valid priority` })
     }
 
