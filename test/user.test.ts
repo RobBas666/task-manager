@@ -2,8 +2,6 @@ import { beforeEach, jest } from '@jest/globals';
 import request from 'supertest';
 import express from 'express';
 import { describe, it, expect } from '@jest/globals';
-import bcrypt, { hash } from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 jest.mock('../src/models', () => ({
   User: {
@@ -23,18 +21,15 @@ jest.mock('jsonwebtoken', () => ({
 }));
 
 import { User as mockUser } from '../src/models';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 import userRouter from "../src/routes/userRoutes";
-import { assert } from 'console';
+import { mockedUser } from './mocks/sequelizeMock';
 
 const app = express();
 app.use(express.json());
 app.use('/api/users', userRouter);
-
-const mockedUser = {
-  id: 1,
-  email: "test@abc.com",
-  password: 'test-pass'
-};
 
 describe('POST /api/users/signup', () => {
 
@@ -42,10 +37,9 @@ describe('POST /api/users/signup', () => {
     jest.clearAllMocks();
   });
 
-
   it('should create a user successfully', async () => {
     (mockUser.create as jest.Mock).mockResolvedValueOnce(mockedUser as never);
-    (bcrypt.hash as jest.Mock).mockResolvedValueOnce("mock-hash" as never);
+    (bcrypt.hash as jest.Mock).mockImplementation(() => Promise.resolve("mocked-hash"));
 
     const response = await request(app)
       .post('/api/users/signup')
@@ -53,8 +47,6 @@ describe('POST /api/users/signup', () => {
         email: 'test@abc.com',
         password: 'test-pass',
       });
-
-      console.log(response)
 
     expect(response.status).toBe(201);
     expect(response.body.message).toBe('User created successfully');
@@ -70,6 +62,12 @@ describe('POST /api/users/signup', () => {
 
     expect(response.status).toBe(500);
     expect(response.body.message).toContain('Email and password are required');
+  });
+});
+
+describe('POST /api/users/login', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should allow a successful login and return a token', async () => {
@@ -101,7 +99,8 @@ describe('POST /api/users/signup', () => {
         password: 'test-pass',
       });
 
-      expect(response.status).toBe(500);
-      expect(response.body.message).toContain("Invalid credentials")
+    expect(response.status).toBe(500);
+    expect(response.body.message).toContain("Invalid credentials")
   });
+
 });

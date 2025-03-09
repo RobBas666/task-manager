@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "CommonJS",
+        "moduleResolution": "node",
         "outDir": "./dist",
         "strict": true,
         "esModuleInterop": true,
@@ -11,7 +12,8 @@
             "jest"
         ],
         "typeRoots": [
-            "./src/types"
+            "./src/types",
+            "./node_modules/@types"
         ]
     },
     "include": [

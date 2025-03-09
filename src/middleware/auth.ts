@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken'
 import { handleError } from '../utils/errorUtils'
 import { jwtUser } from '../consts/interfaces'
 
-const JWT_SECRET = process.env.JWT_SECRET || ''
-
 const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '')
 
@@ -14,7 +12,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction): void =
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET as string)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
     req.user = decoded as jwtUser
     next()
   } catch (e: unknown) {

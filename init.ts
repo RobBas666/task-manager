@@ -1,7 +1,7 @@
 import path from "path";
 import fs from 'fs';
 import crypto from 'crypto';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 const envFilePath = path.join(process.cwd(), '.env');
 const dbFilePath = path.join(process.cwd(), 'database.sqlite');
@@ -19,7 +19,7 @@ deleteFileIfExists(envFilePath);
 
 const secretKey = crypto.randomBytes(32).toString('hex');
 
-const envVars = `PORT=3000,
+const envVars = `PORT=3000
 JWT_SECRET=${secretKey}
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
@@ -27,8 +27,6 @@ REDIS_PORT=6379
 
 fs.writeFileSync(envFilePath,envVars);
 console.log(`Environment file ${envFilePath} has been created`)
-
-dotenv.config();
 
 if(resetDb){
     deleteFileIfExists(dbFilePath);

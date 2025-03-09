@@ -1,10 +1,9 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "dev": "nodemon src/server.ts",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "init": "npx ts-node init.ts",
@@ -44,6 +43,7 @@
     "nodemon": "^3.1.9",
     "standard": "^17.1.2",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.6"
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2"
   }
 }

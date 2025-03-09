@@ -5,6 +5,14 @@ import sequelize from './config/database'
 import userRouter from './routes/userRoutes'
 import taskRouter from './routes/taskRoutes'
 import rateLimit from 'express-rate-limit'
+import dotenv from 'dotenv'
+
+const result = dotenv.config()
+if (result.error) {
+  console.error('Error loading .env file:', result.error)
+} else {
+  console.log('Loaded .env file successfully')
+}
 
 sequelize.sync({ force: false }) // Set to `true` to reset tables on restart
   .then(() => console.log('Database connected'))

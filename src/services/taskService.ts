@@ -3,7 +3,7 @@ import { Priority, Status } from '../consts/enums'
 import { Tag, Task, User } from '../models'
 import { buildErrorMessage } from '../utils/errorUtils'
 import TagService from './tagService'
-import Redis from 'ioredis'
+// import Redis from 'ioredis'
 
 // const redis = new Redis({
 //   host: process.env.REDIS_HOST || "127.0.0.1",
@@ -29,7 +29,7 @@ import Redis from 'ioredis'
 // });
 
 class TaskService {
-  static async createTask(title: string, description: string, dueDate: Date, priority: Priority, status: Status, tags: string[], userId: number) {
+  static async createTask (title: string, description: string, dueDate: Date, priority: Priority, status: Status, tags: string[], userId: number) {
     try {
       const task = await Task.create({
         title,
@@ -40,13 +40,13 @@ class TaskService {
         userId
       })
 
-      console.log("created")
+      console.log('created')
 
-      if (tags && tags.length > 0){
+      if (tags && tags.length > 0) {
         for (const tag of tags) {
           await TagService.addTagToTask(task.id, tag)
         }
-      }      
+      }
 
       return TaskService.getTaskByID(task.id, userId)
     } catch (e: unknown) {
@@ -54,7 +54,7 @@ class TaskService {
     }
   }
 
-  static async getUserTasks(id: number) {
+  static async getUserTasks (id: number) {
     try {
       // const cachedTasks = await redis.get(`user-tasks:${id}`) // caching might not be ideal here as tasks can be updated and we would want to return most uptodate information
 
@@ -80,7 +80,7 @@ class TaskService {
     }
   }
 
-  static async getTaskByID(id: number, userId: number) {
+  static async getTaskByID (id: number, userId: number) {
     try {
       // const cachedTask = await redis.get(`task:${id}-${userId}`)
 
@@ -107,7 +107,7 @@ class TaskService {
         throw new Error(`No tasks for for userId: ${userId} with taskId: ${id}`)
       }
 
-      //await redis.setex(`task:${id}-${userId}`, 300, JSON.stringify(task))
+      // await redis.setex(`task:${id}-${userId}`, 300, JSON.stringify(task))
 
       return task
     } catch (e: unknown) {
@@ -115,7 +115,7 @@ class TaskService {
     }
   }
 
-  static async updateTask(taskId: number, userId: number, updates: { title?: string, description?: string, dueDate?: Date, priority?: Priority, status?: Status }) {
+  static async updateTask (taskId: number, userId: number, updates: { title?: string, description?: string, dueDate?: Date, priority?: Priority, status?: Status }) {
     try {
       const task = await TaskService.getTaskByID(taskId, userId)
 
@@ -124,17 +124,17 @@ class TaskService {
         updated: new Date()
       })
 
-      //await redis.setex(`task:${taskId}-${userId}`, 300, JSON.stringify(task))
+      // await redis.setex(`task:${taskId}-${userId}`, 300, JSON.stringify(task))
     } catch (e: unknown) {
       throw new Error(buildErrorMessage(e, 'Error updating task'))
     }
   }
 
-  static async deleteTask(taskId: number, userId: number) {
+  static async deleteTask (taskId: number, userId: number) {
     try {
       const task = await TaskService.getTaskByID(taskId, userId)
       await task.destroy()
-      //await redis.del(`task:${taskId}-${userId}`)
+      // await redis.del(`task:${taskId}-${userId}`)
       // try { // we could implement something like this so that if our cache is down we can still proceed with the database calls
       //   await redis.del(`task:${taskId}-${userId}`)
       // } catch (e: unknown) {
@@ -146,7 +146,7 @@ class TaskService {
     }
   }
 
-  static async assignTask(id: number, userId: number, newUserId: number) {
+  static async assignTask (id: number, userId: number, newUserId: number) {
     try {
       const task = await TaskService.getTaskByID(id, userId)
 
@@ -171,7 +171,7 @@ class TaskService {
     }
   }
 
-  static async getTasksByStatus(id: number, status: string) {
+  static async getTasksByStatus (id: number, status: string) {
     try {
       const tasks = await Task.findAll({
         where: {
@@ -191,7 +191,7 @@ class TaskService {
     }
   }
 
-  static async getSortedTasks(id: number, sortBy: string, orderBy: string) {
+  static async getSortedTasks (id: number, sortBy: string, orderBy: string) {
     try {
       const tasks = await Task.findAll({
         where: { userId: id },
@@ -209,7 +209,7 @@ class TaskService {
     }
   }
 
-  static async getSortedAndFilteredTasks(id: number, sortBy: string, orderBy: string, status: string) {
+  static async getSortedAndFilteredTasks (id: number, sortBy: string, orderBy: string, status: string) {
     try {
       const tasks = await Task.findAll({ // this can also be achieved by using one of the above methods and filtering or sorting the result
         where: { userId: id, status },
