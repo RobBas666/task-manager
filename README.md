@@ -43,3 +43,4 @@ As mentioned before there are test cases created. The test cases only cover one 
 - Another way to improve scalability is to implement multiple pods should the code be deployed (in kubernetes for example) or to limit the amount of requests a pod can process at a time
 - Errors can be refined to align better with a users experience rather than defaulting to 500
 - Tools like Sentry and elasticsearch can be utilised for error monitoring and alerting
+- Instead of reading keys from the .env file we could make use of tools like AWS Secret Store for more secure storage
